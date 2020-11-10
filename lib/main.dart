@@ -1,23 +1,55 @@
 import 'package:flutter/material.dart';
 // import './app_screens/home.dart';
 
-void main() {
-  runApp(
-    MaterialApp(
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Exploring UI widgets',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Basic List view'),
-        ),
-        body: getLongListView(),
+      home: HomePage1(),
+    );
+  }
+}
+
+class HomePage1 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Basic List view'),
       ),
+      body: getLongListView(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          alertPopup(context);
+        },
+        child: Icon(Icons.add),
+        tooltip: 'Add One More Item',
+      ),
+    );
+  }
+}
+
+void showSnackBar(BuildContext context, String item) {
+  var snackBar = SnackBar(
+    content: Text('You just tapped $item'),
+    action: SnackBarAction(
+      label: 'UNDO',
+      onPressed: () {
+        debugPrint('Doing undo');
+      },
     ),
+    duration: Duration(milliseconds: 1000),
   );
+
+  Scaffold.of(context).showSnackBar(snackBar);
 }
 
 List<String> getListElements() {
-  var items = List<String>.generate(100, (counter) => "Item $counter");
+  var items = List<String>.generate(20, (counter) => "Item $counter");
   return items;
 }
 
@@ -31,6 +63,9 @@ Widget getLongListView() {
         leading: Icon(Icons.arrow_right),
         title: Text(listItemData[index]),
         trailing: Icon(Icons.favorite_border),
+        onTap: () {
+          showSnackBar(context, listItemData[index]);
+        },
       );
     },
   );
@@ -38,79 +73,14 @@ Widget getLongListView() {
   return listViewLong;
 }
 
-Widget longList() {
-  final List<String> entries = <String>['A', 'B', 'C'];
-  final List<int> colorCodes = <int>[600, 500, 100];
-
-  var longList = ListView.builder(
-    padding: EdgeInsets.all(8),
-    itemCount: entries.length,
-    itemBuilder: (BuildContext context, int index) {
-      return Container(
-        height: 50,
-        color: Colors.amber[colorCodes[index]],
-        child: Center(
-          child: Text('Entry ${entries[index]}'),
-        ),
-      );
-    },
+void alertPopup(BuildContext context) {
+  var alertDialog = AlertDialog(
+    title: Text('Hello Kiran'),
+    content: Text('Have a pleasent day'),
   );
 
-  return longList;
-}
-
-Widget generateListView() {
-  var listView = ListView(
-    padding: EdgeInsets.all(8.0),
-    children: <Widget>[
-      Container(
-        height: 50,
-        color: Colors.amber[600],
-        child: const Center(child: Text('Entry A')),
-      ),
-      Container(
-        height: 50,
-        color: Colors.amber[500],
-        child: const Center(child: Text('Entry B')),
-      ),
-      Container(
-        height: 50,
-        color: Colors.amber[100],
-        child: const Center(child: Text('Entry C')),
-      ),
-    ],
+  showDialog(
+    context: context,
+    builder: (BuildContext context) => alertDialog,
   );
-
-  return listView;
-}
-
-Widget getListView() {
-  var listview = ListView(
-    children: <Widget>[
-      ListTile(
-        leading: Icon(Icons.landscape),
-        title: Text('Landscape'),
-        subtitle: Text('Beautiful view'),
-        trailing: Icon(Icons.wb_sunny),
-        onTap: () {
-          debugPrint('Landscape tapped hehe');
-        },
-      ),
-      ListTile(
-        leading: Icon(Icons.laptop_mac),
-        title: Text('Mac'),
-      ),
-      ListTile(
-        leading: Icon(Icons.phone_android),
-        title: Text('Phone'),
-      ),
-      Text('Yet another text element'),
-      Container(
-        color: Colors.red,
-        height: 50.0,
-      ),
-    ],
-  );
-
-  return listview;
 }
