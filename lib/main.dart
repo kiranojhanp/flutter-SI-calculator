@@ -19,68 +19,61 @@ class HomePage1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Basic List view'),
+        title: Text('Simple interest calculator'),
       ),
-      body: getLongListView(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          alertPopup(context);
-        },
-        child: Icon(Icons.add),
-        tooltip: 'Add One More Item',
-      ),
+      body: HomePage(),
     );
   }
 }
 
-void showSnackBar(BuildContext context, String item) {
-  var snackBar = SnackBar(
-    content: Text('You just tapped $item'),
-    action: SnackBarAction(
-      label: 'UNDO',
-      onPressed: () {
-        debugPrint('Doing undo');
-      },
-    ),
-    duration: Duration(milliseconds: 1000),
-  );
-
-  Scaffold.of(context).showSnackBar(snackBar);
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
 }
 
-List<String> getListElements() {
-  var items = List<String>.generate(20, (counter) => "Item $counter");
-  return items;
-}
+class _HomePageState extends State<HomePage> {
+  String nameCity = "";
+  var _currencies = ['Rupees', 'Dollar', 'Pounds', 'Others'];
+  String _currency = 'Rupees';
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(top: 30.0, left: 30.0, right: 30.0),
+      child: Column(
+        children: <Widget>[
+          TextField(
+            onSubmitted: (String string) {
+              setState(() {
+                nameCity = string;
+              });
+            },
+          ),
+          Padding(
+              padding: EdgeInsets.all(30.0),
+              child: Text(
+                'Your favorite city is $nameCity',
+                style: TextStyle(fontSize: 20.0),
+              )),
+          DropdownButton<String>(
+            onChanged: (String newCurrency) {
+              _dropDownItemSelected(newCurrency);
+            },
+            value: this._currency,
+            items: _currencies.map((String currentCurrency) {
+              return DropdownMenuItem(
+                value: currentCurrency,
+                child: Text(currentCurrency),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
 
-Widget getLongListView() {
-  var listItemData = getListElements();
-
-  var listViewLong = ListView.builder(
-    itemCount: listItemData.length,
-    itemBuilder: (context, index) {
-      return ListTile(
-        leading: Icon(Icons.arrow_right),
-        title: Text(listItemData[index]),
-        trailing: Icon(Icons.favorite_border),
-        onTap: () {
-          showSnackBar(context, listItemData[index]);
-        },
-      );
-    },
-  );
-
-  return listViewLong;
-}
-
-void alertPopup(BuildContext context) {
-  var alertDialog = AlertDialog(
-    title: Text('Hello Kiran'),
-    content: Text('Have a pleasent day'),
-  );
-
-  showDialog(
-    context: context,
-    builder: (BuildContext context) => alertDialog,
-  );
+  void _dropDownItemSelected(String newCurrency) {
+    setState(() {
+      this._currency = newCurrency;
+    });
+  }
 }
