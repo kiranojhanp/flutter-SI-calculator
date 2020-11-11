@@ -35,16 +35,20 @@ class HomeBody extends StatefulWidget {
   _HomeBodyState createState() => _HomeBodyState();
 }
 
+// TODO text validation
+
 class _HomeBodyState extends State<HomeBody> {
   final double _minimumPadding = 5.0;
 
-  var _currencies = ['Bhat','Rupees', 'Dollar', 'Pounds', 'Others'];
+  var _formKey = GlobalKey<FormState>();
+
+  var _currencies = ['Bhat', 'Rupees', 'Dollar', 'Pounds', 'Others'];
   String _currency = '';
 
   @override
   void initState() {
     super.initState();
-    _currency = _currencies[0];
+    _currency = _currencies[1];
   }
 
   TextEditingController principalController = TextEditingController();
@@ -57,126 +61,158 @@ class _HomeBodyState extends State<HomeBody> {
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.subtitle1;
 
-    return Container(
-      margin: EdgeInsets.all(_minimumPadding * 2),
-      child: ListView(
-        // physics: ClampingScrollPhysics(),
-        children: <Widget>[
-          getImageAsset(),
-          Padding(
-            padding:
-                EdgeInsets.only(top: _minimumPadding, bottom: _minimumPadding),
-            child: TextField(
-              keyboardType: TextInputType.number,
-              style: textStyle,
-              controller: principalController,
-              decoration: InputDecoration(
-                  labelText: 'Principal',
-                  labelStyle: textStyle,
-                  hintText: 'Enter Principal eg: 12000',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0))),
-            ),
-          ),
-          Padding(
-            padding:
-                EdgeInsets.only(top: _minimumPadding, bottom: _minimumPadding),
-            child: TextField(
-              keyboardType: TextInputType.number,
-              style: textStyle,
-              controller: roiController,
-              decoration: InputDecoration(
-                  labelText: 'Rate of interest',
-                  labelStyle: textStyle,
-                  hintText: 'In percent',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0))),
-            ),
-          ),
-          Padding(
-            padding:
-                EdgeInsets.only(top: _minimumPadding, bottom: _minimumPadding),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: TextField(
-                    keyboardType: TextInputType.number,
-                    style: textStyle,
-                    controller: termController,
-                    decoration: InputDecoration(
-                        labelText: 'Term',
-                        labelStyle: textStyle,
-                        hintText: 'Time in years',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5.0))),
-                  ),
-                ),
-                SizedBox(
-                  width: _minimumPadding * 5,
-                ),
-                Expanded(
-                  child: DropdownButton(
-                    onChanged: (String newCurrencyVal) {
-                      _setCurrencyType(newCurrencyVal);
-                    },
-                    value: _currency,
-                    items: _currencies.map((String currVal) {
-                      return DropdownMenuItem(
-                        child: Text(currVal),
-                        value: currVal,
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding:
-                EdgeInsets.only(top: _minimumPadding, bottom: _minimumPadding),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: RaisedButton(
-                    onPressed: () {
-                      setState(() {
-                        this.displayText = _calculateTotalReturn();
-                      });
-                    },
-                    color: Theme.of(context).accentColor,
-                    textColor: Theme.of(context).primaryColorDark,
-                    child: Text(
-                      'Calculate',
-                      textScaleFactor: 1.25,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: RaisedButton(
-                    onPressed: () {
-                      setState(() {
-                        _reset();
-                      });
-                    },
-                    color: Theme.of(context).primaryColorDark,
-                    textColor: Theme.of(context).primaryColorLight,
-                    child: Text(
-                      'Reset',
-                      textScaleFactor: 1.25,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
+    return Form(
+      key: _formKey,
+      child: Padding(
+        padding: EdgeInsets.all(_minimumPadding * 2),
+        child: ListView(
+          // physics: ClampingScrollPhysics(),
+          children: <Widget>[
+            getImageAsset(),
+            Padding(
               padding: EdgeInsets.only(
                   top: _minimumPadding, bottom: _minimumPadding),
-              child: Text(
-                this.displayText,
-                textScaleFactor: 1.5,
-              )),
-        ],
+              child: TextFormField(
+                keyboardType: TextInputType.number,
+                style: textStyle,
+                controller: principalController,
+                validator: (String val) {
+                  if (val.isEmpty) {
+                    return 'Enter the principal amount';
+                  }
+                },
+                decoration: InputDecoration(
+                    labelText: 'Principal',
+                    labelStyle: textStyle,
+                    hintText: 'Enter Principal eg: 12000',
+                    errorStyle: TextStyle(
+                      color: Colors.yellowAccent,
+                      fontSize: 15.0,
+                    ),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0))),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                  top: _minimumPadding, bottom: _minimumPadding),
+              child: TextFormField(
+                keyboardType: TextInputType.number,
+                style: textStyle,
+                controller: roiController,
+                validator: (String val) {
+                  if (val.isEmpty) {
+                    return 'Enter the rate of interest';
+                  }
+                },
+                decoration: InputDecoration(
+                    labelText: 'Rate of interest',
+                    labelStyle: textStyle,
+                    hintText: 'In percent',
+                    errorStyle: TextStyle(
+                      color: Colors.yellowAccent,
+                      fontSize: 15.0,
+                    ),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0))),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                  top: _minimumPadding, bottom: _minimumPadding),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      style: textStyle,
+                      controller: termController,
+                      validator: (String val) {
+                        if (val.isEmpty) {
+                          return 'Enter the years';
+                        }
+                      },
+                      decoration: InputDecoration(
+                          labelText: 'Term',
+                          labelStyle: textStyle,
+                          hintText: 'Time in years',
+                          errorStyle: TextStyle(
+                            color: Colors.yellowAccent,
+                            fontSize: 15.0,
+                          ),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5.0))),
+                    ),
+                  ),
+                  SizedBox(
+                    width: _minimumPadding * 5,
+                  ),
+                  Expanded(
+                    child: DropdownButton(
+                      onChanged: (String newCurrencyVal) {
+                        _setCurrencyType(newCurrencyVal);
+                      },
+                      value: _currency,
+                      items: _currencies.map((String currVal) {
+                        return DropdownMenuItem(
+                          child: Text(currVal),
+                          value: currVal,
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                  top: _minimumPadding, bottom: _minimumPadding),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: RaisedButton(
+                      onPressed: () {
+                        setState(() {
+                          if (_formKey.currentState.validate()) {
+                            this.displayText = _calculateTotalReturn();
+                          }
+                        });
+                      },
+                      color: Theme.of(context).accentColor,
+                      textColor: Theme.of(context).primaryColorDark,
+                      child: Text(
+                        'Calculate',
+                        textScaleFactor: 1.25,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: RaisedButton(
+                      onPressed: () {
+                        setState(() {
+                          _reset();
+                        });
+                      },
+                      color: Theme.of(context).primaryColorDark,
+                      textColor: Theme.of(context).primaryColorLight,
+                      child: Text(
+                        'Reset',
+                        textScaleFactor: 1.25,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+                padding: EdgeInsets.only(
+                    top: _minimumPadding, bottom: _minimumPadding),
+                child: Text(
+                  this.displayText,
+                  textScaleFactor: 1.5,
+                )),
+          ],
+        ),
       ),
     );
   }
@@ -214,7 +250,7 @@ class _HomeBodyState extends State<HomeBody> {
     termController.text = '';
 
     displayText = '';
-    _currency = _currencies[0];
+    _currency = _currencies[1];
   }
 
   void _setCurrencyType(String newCurrencyVal) {
