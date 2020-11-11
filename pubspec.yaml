@@ -30,6 +30,7 @@ flutter:
   assets:
     - images/logo.webp
     - images/flight.png
+    - images/money.png
 
     # - images/a_dot_ham.jpeg
 
