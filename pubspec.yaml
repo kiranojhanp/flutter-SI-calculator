@@ -1,9 +1,7 @@
-name: serenity
-description: A new Flutter project.
+name: Rembery
+description: A note taking app made with flutter.
 
-
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 version: 1.0.0+1
 
@@ -20,10 +18,11 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  sqflite: any
+  path_provider: any
+  intl: ^0.16.1
 
 flutter:
-
-
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
@@ -31,6 +30,7 @@ flutter:
     - images/logo.webp
     - images/flight.png
     - images/money.png
+    - images/avatar.png
 
     # - images/a_dot_ham.jpeg
 
@@ -54,7 +54,6 @@ flutter:
         - asset: fonts/Raleway-LightItalic.ttf
           weight: 300
           style: italic
-
 
     - family: Roboto
       fonts:
